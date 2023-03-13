@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate, useParams  } from 'react-router-dom';
 import {
   TextField,
@@ -20,7 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-const BACKEND_URL = 'http://127.0.0.1:8000';
+const BACKEND_URL = 'http://192.168.0.13:8000';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100vh',
     '& > *': {
       margin: theme.spacing(1),
     },
@@ -140,6 +139,8 @@ function BookPage() {
 
   const { token } = useParams();
   const [ bookData, setBookData ] = useState( null );
+  const tableRef = useRef(null);
+  const [tableHeight, setTableHeight] = useState('auto');
 
   const navigate = useNavigate();
 
@@ -164,6 +165,13 @@ function BookPage() {
     return () => {
       clearInterval(interval);
     };
+  }, []);
+
+  useEffect(() => {
+    if (tableRef.current) {
+      const tableHeight = tableRef.current.offsetHeight;
+      setTableHeight(tableHeight);
+    }
   }, []);
 
   function handleGrab( partId ) {
@@ -206,8 +214,8 @@ function BookPage() {
       { !bookData ? (
         <CircularProgress className={classes.progress} />
       ) : (
-        <TableContainer style={{ maxHeight: '90vh' }}>
-          <Table>
+        <div style={{ height: tableHeight, width: '90vw', marginTop: 10, marginBottom: 10 }}>
+          <Table ref={tableRef}>
             <colgroup>
               <col style={{width:'30%'}}/>
               <col style={{width:'40%'}}/>
@@ -252,7 +260,7 @@ function BookPage() {
               ) ) }
             </TableBody>
           </Table>
-        </TableContainer>
+        </div>
       )}
     </div>
   );
