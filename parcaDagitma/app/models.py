@@ -64,9 +64,10 @@ class BookPart( models.Model ):
         return {
             "id": self.id,
             "bookId": self.book.id,
+            "creator": self.book.creator,
             "owner": self.owner,
             "name": self.bookPartTemplate.name,
         }
 
     def __str__( self ):
-        return str( self.book ) + '/' + str( self.bookPart )
+        return str( self.book ) + '/' + str( self.bookPartTemplate )

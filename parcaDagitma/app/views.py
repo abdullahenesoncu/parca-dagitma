@@ -20,6 +20,8 @@ def createBookFromTemplate( request ):
     if Book.objects.filter( creator=creator, name=bookName ).count():
         return JsonResponse( Book.objects.filter( creator=creator, name=bookName ).first().dump() )
     
+    print( bookTemplateId, BookTemplate.objects.get( pk=bookTemplateId ) )
+    
     book = Book.objects.create( creator=creator, name=bookName, bookTemplate=BookTemplate.objects.get( pk=bookTemplateId ) )
     return JsonResponse( book.dump() )
 
@@ -50,7 +52,8 @@ def releaseBookPart( request ):
     owner = data.get( 'owner' )
 
     part = BookPart.objects.get( pk=partId )
-    if part.owner != owner:
+    print(part.owner, part.book.creator)
+    if part.owner != owner and part.book.creator != owner:
         return JsonResponse( {} )
     
     part.owner = ''

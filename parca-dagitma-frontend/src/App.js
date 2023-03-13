@@ -12,9 +12,9 @@ import {
   Table,
   TableRow,
   TableCell,
+  TableContainer,
   IconButton,
 } from '@material-ui/core';
-import { DataGridPro, GridRow, GridColumnHeaders } from '@mui/x-data-grid-pro';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -74,6 +74,7 @@ function HomePage() {
   }
 
   const handleCreateBook = () => {
+    console.log( 'selectedTemplate', selectedTemplate );
     const username = localStorage.getItem('username');
     fetch(`${BACKEND_URL}/app/createBookFromTemplate/`, {
       method: 'POST',
@@ -196,43 +197,49 @@ function BookPage() {
       .then((data) => {
       });
   }
+
+  const username = localStorage.getItem( 'username' );
   
   return( 
     <div className={classes.container}>
       { !bookData ? (
         <CircularProgress className={classes.progress} />
       ) : (
-        <Table>
-          { bookData.parts.map( part => (
-            <TableRow>
-              <TableCell size='small'> {part.name} </TableCell>
-              <TableCell size='small'> {part.owner} </TableCell>
-              <TableCell size='small'>
-                { !part.owner ? 
-                  (
-                    <IconButton
-                      onClick={() => handleGrab( part.id )}
-                    >
-                      <AddIcon/>
-                    </IconButton>
-                  ) 
-                  : 
-                  part.owner == localStorage.getItem( 'username' ) ? (
+        <TableContainer style={{ maxHeight: '90vh' }}>
+          <Table>
+            { bookData.parts.map( part => (
+              <TableRow>
+                <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}> {part.name} </TableCell>
+                <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}> {part.owner} </TableCell>
+                <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}>
+                  { !part.owner ? 
+                    (
                       <IconButton
-                        onClick={() => handleRelease( part.id )}
+                        onClick={() => handleGrab( part.id )}
+                        size='small'
                       >
-                        <RemoveIcon/>
+                        <AddIcon/>
                       </IconButton>
-                  )
-                  :
-                  (
-                    <></>
-                  )
-                }
-              </TableCell>
-            </TableRow>
-          ) ) }
-        </Table>
+                    ) 
+                    : 
+                    part.owner == username || part.creator == username ? (
+                        <IconButton
+                          onClick={() => handleRelease( part.id )}
+                          size='small'
+                        >
+                          <RemoveIcon/>
+                        </IconButton>
+                    )
+                    :
+                    (
+                      <></>
+                    )
+                  }
+                </TableCell>
+              </TableRow>
+            ) ) }
+          </Table>
+        </TableContainer>
       )}
     </div>
   );
