@@ -325,7 +325,7 @@ function App() {
       </div>
       <Router>
         <Routes>
-          <Route path="/" element={ <HomePage /> } />
+          <Route path="/olustur" element={ <HomePage /> } />
           <Route path="/book/:token" element={ <BookPage /> } />
         </Routes>
       </Router>
