@@ -49,7 +49,8 @@ class Book( models.Model ):
             "creator": self.creator,
             "name": self.name,
             "token": self.token,
-            "parts": [ part.dump() for part in self.parts.all() ]
+            "parts": [ part.dump() for part in self.parts.all() ],
+            "templateName": self.bookTemplate.name,
         }
     
     def __str__( self ):

@@ -13,6 +13,7 @@ import {
   TableRow,
   TableCell,
   TableContainer,
+  TableBody,
   IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -207,37 +208,49 @@ function BookPage() {
       ) : (
         <TableContainer style={{ maxHeight: '90vh' }}>
           <Table>
-            { bookData.parts.map( part => (
-              <TableRow>
-                <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}> {part.name} </TableCell>
-                <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}> {part.owner} </TableCell>
-                <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}>
-                  { !part.owner ? 
-                    (
-                      <IconButton
-                        onClick={() => handleGrab( part.id )}
-                        size='small'
-                      >
-                        <AddIcon/>
-                      </IconButton>
-                    ) 
-                    : 
-                    part.owner == username || part.creator == username ? (
+            <colgroup>
+              <col style={{width:'30%'}}/>
+              <col style={{width:'40%'}}/>
+              <col style={{width:'30%'}}/>
+            </colgroup>
+            <TableBody>
+              <TableRow style={{ height: 30 }}>
+                <TableCell>{ bookData.creator } tarafından</TableCell>
+                <TableCell>{ bookData.name }</TableCell>
+                <TableCell>{ bookData.templateName } dağıtımı</TableCell>
+              </TableRow>
+              { bookData.parts.map( part => (
+                <TableRow style={{ height: 30 }}>
+                  <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}> {part.name} </TableCell>
+                  <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}> {part.owner} </TableCell>
+                  <TableCell size='small' style={{ padding: "0px 12px 0px 12px" }}>
+                    { !part.owner ? 
+                      (
                         <IconButton
-                          onClick={() => handleRelease( part.id )}
+                          onClick={() => handleGrab( part.id )}
                           size='small'
                         >
-                          <RemoveIcon/>
+                          <AddIcon/>
                         </IconButton>
-                    )
-                    :
-                    (
-                      <></>
-                    )
-                  }
-                </TableCell>
-              </TableRow>
-            ) ) }
+                      ) 
+                      : 
+                      part.owner == username || bookData.creator == username ? (
+                          <IconButton
+                            onClick={() => handleRelease( part.id )}
+                            size='small'
+                          >
+                            <RemoveIcon/>
+                          </IconButton>
+                      )
+                      :
+                      (
+                        <></>
+                      )
+                    }
+                  </TableCell>
+                </TableRow>
+              ) ) }
+            </TableBody>
           </Table>
         </TableContainer>
       )}
@@ -285,21 +298,34 @@ function App() {
         >
           Giriş Yap
         </Button>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div>Her türlü soru, sorun ve önerileriniz için:</div>
+          <div>+90 (531) 624 83 37</div>
+          <div>abdullahenesoncu@gmail.com</div>
+        </div>
       </div>
     )
   }
 
   return (
     <>
-      <Button variant="contained" color="secondary" onClick={handleLogout}>
-        Logout
-      </Button>
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: '10px 10px 10px 10px'}}>
+        <Button variant="contained" color="secondary" onClick={handleLogout}>
+          Çıkış Yap
+        </Button>
+        <div>Hoşgeldiniz {username}</div>
+      </div>
       <Router>
         <Routes>
           <Route path="/" element={ <HomePage /> } />
           <Route path="/book/:token" element={ <BookPage /> } />
         </Routes>
       </Router>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <div>Her türlü soru, sorun ve önerileriniz için:</div>
+        <div>+90 (531) 624 83 37</div>
+        <div>abdullahenesoncu@gmail.com</div>
+      </div>
     </>
   );
 }
