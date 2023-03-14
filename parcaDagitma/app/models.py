@@ -1,7 +1,8 @@
 from django.db import models
 from parcaDagitma.helpers import randomString
+from parcaDagitma.models import BaseModel
 
-class BookTemplate( models.Model ):
+class BookTemplate( BaseModel ):
     name = models.CharField( max_length=1000, blank=False )
 
     def dump( self ):
@@ -14,7 +15,7 @@ class BookTemplate( models.Model ):
     def __str__( self ):
         return self.name
 
-class BookPartTemplate( models.Model ):
+class BookPartTemplate( BaseModel ):
     bookTemplate = models.ForeignKey( BookTemplate, null=False, blank=False, on_delete=models.CASCADE, related_name='parts' )
     name = models.CharField( max_length=1000, blank=False )
 
@@ -28,7 +29,7 @@ class BookPartTemplate( models.Model ):
     def __str__( self ):
         return str( self.bookTemplate ) + '/' + self.name
 
-class Book( models.Model ):
+class Book( BaseModel ):
     bookTemplate = models.ForeignKey( BookTemplate, null=False, blank=False, on_delete=models.CASCADE )
     creator = models.CharField( max_length=1000, blank=False )
     name = models.CharField( max_length=1000, blank=False )
@@ -56,7 +57,7 @@ class Book( models.Model ):
     def __str__( self ):
         return self.name + ' by ' + self.creator
 
-class BookPart( models.Model ):
+class BookPart( BaseModel ):
     book = models.ForeignKey( Book, null=False, blank=False, on_delete=models.CASCADE, related_name="parts" )
     bookPartTemplate = models.ForeignKey( BookPartTemplate, null=False, blank=False, on_delete=models.CASCADE )
     owner = models.CharField( max_length=1000, blank=True, null=True, default='' )
