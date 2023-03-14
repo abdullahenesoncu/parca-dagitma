@@ -20,7 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-const BACKEND_URL = 'http://192.168.0.13:8000';
+const BACKEND_URL = 'http://13.50.52.205:8000';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -161,9 +161,14 @@ function BookPage() {
   }
 
   useEffect(() => {
-    const interval = setInterval(getBookData, 1000);
+    const intervalId  = setInterval(getBookData, 1000);
+
+    setTimeout(() => {
+      clearInterval( intervalId );
+    }, 30000);
+
     return () => {
-      clearInterval(interval);
+      clearInterval( intervalId );
     };
   }, []);
 
@@ -175,6 +180,7 @@ function BookPage() {
   }, []);
 
   function handleGrab( partId ) {
+    getBookData();
     const username = localStorage.getItem('username');
     fetch(`${BACKEND_URL}/app/grabBookPart/`, {
       method: 'POST',
@@ -187,10 +193,11 @@ function BookPage() {
       }),
     })
       .then((response) => response.json())
-      .then((data) => {});
+      .then((data) => {getBookData()});
   }
 
   function handleRelease( partId ) {
+    getBookData();
     const username = localStorage.getItem('username');
     fetch(`${BACKEND_URL}/app/releaseBookPart/`, {
       method: 'POST',
@@ -203,8 +210,7 @@ function BookPage() {
       }),
     })
       .then((response) => response.json())
-      .then((data) => {
-      });
+      .then((data) => {getBookData()});
   }
 
   const username = localStorage.getItem( 'username' );
@@ -294,7 +300,7 @@ function App() {
     return (
       <div className={classes.container}>
         <TextField
-          label="Kullanıcı Adı"
+          label="Ad Soyad"
           value={ usernameText }
           onChange={ handleUsernameChange }
         />
@@ -307,7 +313,8 @@ function App() {
           Giriş Yap
         </Button>
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <div>Her türlü soru, sorun ve önerileriniz için:</div>
+          <div>Her türlü soru, sorun, görüş ve önerileriniz için:</div>
+          <div>Yeni hatim taslakları eklemek için:</div>
           <div>+90 (531) 624 83 37</div>
           <div>abdullahenesoncu@gmail.com</div>
         </div>
@@ -330,7 +337,8 @@ function App() {
         </Routes>
       </Router>
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <div>Her türlü soru, sorun ve önerileriniz için:</div>
+        <div>Her türlü soru, sorun, görüş ve önerileriniz için:</div>
+        <div>Yeni hatim taslakları eklemek için:</div>
         <div>+90 (531) 624 83 37</div>
         <div>abdullahenesoncu@gmail.com</div>
       </div>
